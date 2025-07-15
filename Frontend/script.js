@@ -15,9 +15,10 @@ let userAnswers = [];
 let timeLeft = 900;
 let timerInterval;
 
-
+// ✅ Hosted backend URL
 const BASE_URL = "https://quizard-backend-s9l2.onrender.com";
 
+// Start quiz on button click
 startBtn.addEventListener("click", startQuiz);
 
 function startQuiz() {
@@ -79,14 +80,22 @@ function loadQuestion() {
       selectedAnswer = option;
       highlightSelected(btn);
       nextBtn.classList.remove("hidden");
+
+      // Hide submit until the last question
+      if (currentQuestionIndex === questions.length - 1) {
+        nextBtn.classList.add("hidden");
+        submitBtn.classList.remove("hidden");
+      }
     };
     optionsContainer.appendChild(btn);
   });
 
+  // Make sure correct button shows depending on the question
   if (currentQuestionIndex === questions.length - 1) {
     nextBtn.classList.add("hidden");
     submitBtn.classList.remove("hidden");
   } else {
+    nextBtn.classList.remove("hidden");
     submitBtn.classList.add("hidden");
   }
 }
@@ -100,19 +109,33 @@ function highlightSelected(selectedBtn) {
 }
 
 nextBtn.addEventListener("click", () => {
-  if (selectedAnswer) {
-    userAnswers.push(selectedAnswer);
-    currentQuestionIndex++;
-    if (currentQuestionIndex < questions.length) {
-      loadQuestion();
-    } else {
-      submitQuiz("✅ Quiz Submitted!");
-    }
+  if (selectedAnswer === null) {
+    alert("Please select an answer before proceeding.");
+    return;
+  }
+
+  userAnswers.push({
+    id: questions[currentQuestionIndex].id,
+    selected: selectedAnswer,
+  });
+
+  currentQuestionIndex++;
+
+  if (currentQuestionIndex < questions.length) {
+    loadQuestion();
+  } else {
+    submitQuiz("✅ Quiz Submitted!");
   }
 });
 
 submitBtn.addEventListener("click", () => {
-  if (selectedAnswer) userAnswers.push(selectedAnswer);
+  if (selectedAnswer) {
+    userAnswers.push({
+      id: questions[currentQuestionIndex].id,
+      selected: selectedAnswer,
+    });
+  }
+
   submitBtn.disabled = true;
   submitQuiz("✅ Quiz Submitted!");
 });
