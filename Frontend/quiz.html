@@ -1,0 +1,67 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bible Quiz</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    @keyframes slideIn {
+      from { transform: translateX(30px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    .animate-slide-in {
+      animation: slideIn 0.6s ease-out;
+    }
+  </style>
+</head>
+<body class="r min-h-screen flex items-center justify-center p-6">  <div class="grid md:grid-cols-2 gap-10 max-w-6xl w-full items-center">
+
+  <!--LEFT SECTION-->
+    <div class="hidden md:flex flex-col items-center justify-center text-center px-6">
+      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135755.png" alt="Quiz Icon" class="w-64 h-64 mb-6">
+      <h1 class="text-3xl font-bold text-indigo-700">Test Your Bible Knowledge!</h1>
+      <p class="text-gray-600 mt-2">Challenge yourself and see how much you know.</p>
+    </div>
+    
+    <!-- RIGHT SECTION and MAIN -->
+<div class="bg-gradient-to-r from-purple-500 to-purple-900 rounded-2xl p-8 w-full animate-slide-in">
+
+  <!-- LOADING CARD -->
+    <div id="start-screen" class="text-center">
+    <h2 class="text-2xl font-semibold text-white mb-4">Ready to begin?</h2>
+    <button onclick="startQuiz()" class="bg-bg-gradient-to-r from-purple-500 to-purple-900 border border-3 border-white text-white px-6 py-2 rounded hover:bg-white hover:text-purple-900 transition">
+      Start Quiz
+    </button>
+  </div>
+
+  <!-- QUIZ CARD-->
+  <div id="quiz-content" class="hidden ">
+    <!-- HEADER -->
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center gap-2 text-white font-medium">
+        <i class="fas fa-clock"></i>
+        <span id="timer">--:--</span>
+      </div>
+      <div class="text-sm bg-white text-purple-500 px-3 py-1 rounded font-semibold">Quiz</div>
+    </div>
+
+    <!-- QUESTION TRACKER -->
+    <p class="text-purple-200 text-sm mb-2">Question <span id="current-question">1</span> of <span id="total-questions">--</span></p>
+    <h2 class="text-xl text-white font-semibold mb-6" id="question-text">Loading...</h2>
+    <div class="space-y-4 text-purple-150 mb-6" id="options-container"></div>
+
+    <!-- BUTTONS -->
+    <div class="flex justify-end gap-4">
+      <button id="nextBtn" class="bg-white text-purple-500 px-6 py-2 rounded-lg hover:bg-white transition hidden">
+        Next <i class="fas fa-arrow-right ml-2"></i>
+      </button>
+      <button id="submitBtn" class="bg-white text-purple-500 px-6 py-2 rounded-lg hover:bg-purple-200 transition hidden">
+        Submit <i class="fas fa-paper-plane ml-2"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+  </div>  <script src="script.js"></script></body>
+</html>
