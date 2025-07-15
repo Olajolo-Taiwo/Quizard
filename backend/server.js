@@ -2,10 +2,11 @@ const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+
 
 const questions = JSON.parse(fs.readFileSync('./data/questions.json', 'utf-8'));
 
@@ -18,9 +19,8 @@ app.post('/api/submit', (req, res) => {
   const userAnswers = req.body.answers;
   let score = 0;
 
-  userAnswers.forEach(({ id, selected }) => {
-    const q = questions.find(q => q.id === id);
-    if (q && q.answer === selected) score++;
+  userAnswers.forEach((ans, index) => {
+    if (ans === questions[index].answer) score++;
   });
 
   res.json({ score, total: questions.length });
