@@ -9,6 +9,5 @@ yarn-error.log*
 # OS
 .DS_Store
 
-# Optional frontend build folders
 dist/
 build/
