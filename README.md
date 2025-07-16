@@ -8,24 +8,7 @@
 
 - **Frontend**: [https://quizard-tawny.vercel.app](https://quizard-tawny.vercel.app)  
 - **Backend**: [https://quizard-backend-s9l2.onrender.com](https://quizard-backend-s9l2.onrender.com)
-
----
-
-Quizard/ 
-├── frontend/             
-# HTML, Tailwind CSS, JavaScript 
-│   ├── index.html           # Main Content
-│   └── script.js            # Quiz logic 
-│ 
-├── backend/              # Express server 
-│   ├── server.js         # Node.js API server 
-│   ├── data/ 
-│   │   └── questions.json  # Bible quiz questions 
-│   ├── package.json 
-│   ├── package-lock.json 
-│   └── .gitignore 
-│ └── README.md             # Project documentation
-
+- 
 ---
 
 ## ⚙️ Features
