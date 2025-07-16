@@ -6,7 +6,7 @@
 
 ## 🚀 Live Demo
 
-- **Frontend**: [https://your-frontend-url.vercel.app](https://quizard-tawny.vercel.app)  
+- **Frontend**: [https://quizard-tawny.vercel.app](https://quizard-tawny.vercel.app)  
 - **Backend**: [https://quizard-backend-s9l2.onrender.com](https://quizard-backend-s9l2.onrender.com)
 
 ---
