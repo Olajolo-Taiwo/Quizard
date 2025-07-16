@@ -11,21 +11,20 @@
 
 ---
 
-## 📂 Repository Structure
-Quizard/
-├── frontend/             # HTML, Tailwind CSS, JavaScript
-│   ├── index.html        # Main Quiz/start screen
-│   ├── script.js         # Quiz logic
-│
-├── backend/              # Express server
-│   ├── server.js         # Node.js API server
-│   ├── data/
-│   │   └── questions.json  # Bible quiz questions
-│   ├── package.json
-│   ├── package-lock.json
-│   └── .gitignore
-│
-└── README.md             # Project documentation
+Quizard/ 
+├── frontend/             
+# HTML, Tailwind CSS, JavaScript 
+│   ├── index.html           # Main Content
+│   └── script.js            # Quiz logic 
+│ 
+├── backend/              # Express server 
+│   ├── server.js         # Node.js API server 
+│   ├── data/ 
+│   │   └── questions.json  # Bible quiz questions 
+│   ├── package.json 
+│   ├── package-lock.json 
+│   └── .gitignore 
+│ └── README.md             # Project documentation
 
 ---
 
