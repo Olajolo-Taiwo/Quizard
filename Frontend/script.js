@@ -1,176 +1,174 @@
-const quizContent = document.getElementById("quiz-content");
-const questionText = document.getElementById("question-text");
-const optionsContainer = document.getElementById("options-container");
-const currentQuestionElem = document.getElementById("current-question");
-const totalQuestionsElem = document.getElementById("total-questions");
-const nextBtn = document.getElementById("nextBtn");
-const submitBtn = document.getElementById("submitBtn");
-const timerDisplay = document.getElementById("timer");
-const startBtn = document.getElementById("startBtn");
+document.addEventListener("DOMContentLoaded", () => {
+  const quizContent = document.getElementById("quiz-content");
+  const questionText = document.getElementById("question-text");
+  const optionsContainer = document.getElementById("options-container");
+  const currentQuestionElem = document.getElementById("current-question");
+  const totalQuestionsElem = document.getElementById("total-questions");
+  const nextBtn = document.getElementById("nextBtn");
+  const submitBtn = document.getElementById("submitBtn");
+  const timerDisplay = document.getElementById("timer");
+  const startBtn = document.getElementById("startBtn");
 
-let questions = [];
-let currentQuestionIndex = 0;
-let selectedAnswer = null;
-let userAnswers = [];
-let timeLeft = 900;
-let timerInterval;
+  let questions = [];
+  let currentQuestionIndex = 0;
+  let selectedAnswer = null;
+  let userAnswers = [];
+  let timeLeft = 900;
+  let timerInterval;
 
-// ✅ Hosted backend URL
-const BASE_URL = "https://quizard-backend-s9l2.onrender.com";
+  const BASE_URL = "https://quizard-backend-s9l2.onrender.com";
 
-// Start quiz on button click
-startBtn.addEventListener("click", startQuiz);
+  startBtn.addEventListener("click", startQuiz);
+  nextBtn.addEventListener("click", handleNext);
+  submitBtn.addEventListener("click", handleSubmit);
 
-function startQuiz() {
-  document.getElementById("start-screen").classList.add("hidden");
-  quizContent.classList.remove("hidden");
-  fetchQuestions();
-  startTimer();
-}
+  function startQuiz() {
+    document.getElementById("start-screen").classList.add("hidden");
+    quizContent.classList.remove("hidden");
+    fetchQuestions();
+    startTimer();
+  }
 
-function startTimer() {
-  updateTimerDisplay();
-  timerInterval = setInterval(() => {
-    timeLeft--;
+  function startTimer() {
     updateTimerDisplay();
-    if (timeLeft <= 0) {
-      clearInterval(timerInterval);
-      submitQuiz("⏰ Time's up!");
-    }
-  }, 1000);
-}
-
-function updateTimerDisplay() {
-  const minutes = String(Math.floor(timeLeft / 60)).padStart(2, "0");
-  const seconds = String(timeLeft % 60).padStart(2, "0");
-  timerDisplay.textContent = `${minutes}:${seconds}`;
-}
-
-function fetchQuestions() {
-  questionText.textContent = "⏳ Loading questions...";
-  fetch(`${BASE_URL}/api/questions`)
-    .then((res) => res.json())
-    .then((data) => {
-      questions = data;
-      totalQuestionsElem.textContent = questions.length;
-      loadQuestion();
-    })
-    .catch(() => {
-      questionText.innerHTML = `
-        <span class="text-red-500 font-semibold">❌ Failed to load questions.</span><br>
-        <span class="text-sm text-gray-500">Please check your connection or try again.</span>
-      `;
-    });
-}
-
-function loadQuestion() {
-  const q = questions[currentQuestionIndex];
-  currentQuestionElem.textContent = currentQuestionIndex + 1;
-  questionText.textContent = q.question;
-  optionsContainer.innerHTML = "";
-  selectedAnswer = null;
-  nextBtn.classList.add("hidden");
-
-  q.options.forEach((option) => {
-    const btn = document.createElement("button");
-    btn.textContent = option;
-    btn.className =
-      "w-full border border-gray-300 rounded-lg py-3 px-4 text-left hover:bg-indigo-50 transition";
-    btn.onclick = () => {
-      selectedAnswer = option;
-      highlightSelected(btn);
-      nextBtn.classList.remove("hidden");
-
-      // Hide submit until the last question
-      if (currentQuestionIndex === questions.length - 1) {
-        nextBtn.classList.add("hidden");
-        submitBtn.classList.remove("hidden");
+    timerInterval = setInterval(() => {
+      timeLeft--;
+      updateTimerDisplay();
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        submitQuiz("⏰ Time's up!");
       }
-    };
-    optionsContainer.appendChild(btn);
-  });
-
-  // Make sure correct button shows depending on the question
-  if (currentQuestionIndex === questions.length - 1) {
-    nextBtn.classList.add("hidden");
-    submitBtn.classList.remove("hidden");
-  } else {
-    nextBtn.classList.remove("hidden");
-    submitBtn.classList.add("hidden");
-  }
-}
-
-function highlightSelected(selectedBtn) {
-  const buttons = optionsContainer.querySelectorAll("button");
-  buttons.forEach((btn) =>
-    btn.classList.remove("bg-indigo-100", "font-semibold")
-  );
-  selectedBtn.classList.add("bg-indigo-100", "font-semibold");
-}
-
-nextBtn.addEventListener("click", () => {
-  if (selectedAnswer === null) {
-    alert("Please select an answer before proceeding.");
-    return;
+    }, 1000);
   }
 
-  userAnswers.push({
-    id: questions[currentQuestionIndex].id,
-    selected: selectedAnswer,
-  });
-
-  currentQuestionIndex++;
-
-  if (currentQuestionIndex < questions.length) {
-    loadQuestion();
-  } else {
-    submitQuiz("✅ Quiz Submitted!");
+  function updateTimerDisplay() {
+    const minutes = String(Math.floor(timeLeft / 60)).padStart(2, "0");
+    const seconds = String(timeLeft % 60).padStart(2, "0");
+    timerDisplay.textContent = `${minutes}:${seconds}`;
   }
-});
 
-submitBtn.addEventListener("click", () => {
-  if (selectedAnswer) {
+  function fetchQuestions() {
+    questionText.textContent = "⏳ Loading questions...";
+    fetch(`${BASE_URL}/api/questions`)
+      .then((res) => res.json())
+      .then((data) => {
+        questions = data;
+        totalQuestionsElem.textContent = questions.length;
+        loadQuestion();
+      })
+      .catch(() => {
+        questionText.innerHTML = `
+          <span class="text-red-500 font-semibold">❌ Failed to load questions.</span><br>
+          <span class="text-sm text-gray-500">Please check your connection or try again.</span>
+        `;
+      });
+  }
+
+  function loadQuestion() {
+    const q = questions[currentQuestionIndex];
+    currentQuestionElem.textContent = currentQuestionIndex + 1;
+    questionText.textContent = q.question;
+    optionsContainer.innerHTML = "";
+    selectedAnswer = null;
+
+    q.options.forEach((option) => {
+      const btn = document.createElement("button");
+      btn.textContent = option;
+      btn.className =
+        "w-full border border-gray-300 rounded-lg py-3 px-4 text-left hover:bg-indigo-50 transition";
+      btn.onclick = () => {
+        selectedAnswer = option;
+        highlightSelected(btn);
+        updateButtons();
+      };
+      optionsContainer.appendChild(btn);
+    });
+
+    updateButtons();
+  }
+
+  function highlightSelected(selectedBtn) {
+    const buttons = optionsContainer.querySelectorAll("button");
+    buttons.forEach((btn) =>
+      btn.classList.remove("bg-indigo-100", "font-semibold")
+    );
+    selectedBtn.classList.add("bg-indigo-100", "font-semibold");
+  }
+
+  function updateButtons() {
+    if (currentQuestionIndex === questions.length - 1) {
+      nextBtn.classList.add("hidden");
+      submitBtn.classList.remove("hidden");
+    } else {
+      nextBtn.classList.remove("hidden");
+      submitBtn.classList.add("hidden");
+    }
+  }
+
+  function handleNext() {
+    if (selectedAnswer === null) {
+      alert("Please select an answer before proceeding.");
+      return;
+    }
+
     userAnswers.push({
       id: questions[currentQuestionIndex].id,
       selected: selectedAnswer,
     });
+
+    currentQuestionIndex++;
+
+    if (currentQuestionIndex < questions.length) {
+      loadQuestion();
+    } else {
+      submitQuiz("✅ Quiz Submitted!");
+    }
   }
 
-  submitBtn.disabled = true;
-  submitQuiz("✅ Quiz Submitted!");
-});
+  function handleSubmit() {
+    if (selectedAnswer) {
+      userAnswers.push({
+        id: questions[currentQuestionIndex].id,
+        selected: selectedAnswer,
+      });
+    }
 
-function submitQuiz(message) {
-  clearInterval(timerInterval);
+    submitBtn.disabled = true;
+    submitQuiz("✅ Quiz Submitted!");
+  }
 
-  document.querySelector(".grid").innerHTML = `
-    <div class="text-center w-full">
-      <p class="text-indigo-600 text-lg font-semibold mb-4">Submitting your quiz...</p>
-    </div>
-  `;
+  function submitQuiz(message) {
+    clearInterval(timerInterval);
 
-  fetch(`${BASE_URL}/api/submit`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ answers: userAnswers }),
-  })
-    .then((res) => res.json())
-    .then((result) => {
-      document.querySelector(".grid").innerHTML = `
-        <div class="text-center w-full">
-          <h2 class="text-2xl font-bold text-indigo-700 mb-4">${message}</h2>
-          <p class="text-lg text-gray-700">You scored ${result.score} out of ${result.total}</p>
-          <button onclick="location.reload()" class="mt-6 bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 transition">
-            🔁 Restart Quiz
-          </button>
-        </div>
-      `;
+    document.querySelector(".grid").innerHTML = `
+      <div class="text-center w-full">
+        <p class="text-indigo-600 text-lg font-semibold mb-4">Submitting your quiz...</p>
+      </div>
+    `;
+
+    fetch(`${BASE_URL}/api/submit`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ answers: userAnswers }),
     })
-    .catch(() => {
-      document.querySelector(".grid").innerHTML = `
-        <div class="text-center w-full">
-          <p class="text-red-600 font-semibold">❌ Failed to submit quiz. Try again later.</p>
-        </div>
-      `;
-    });
-}
+      .then((res) => res.json())
+      .then((result) => {
+        document.querySelector(".grid").innerHTML = `
+          <div class="text-center w-full">
+            <h2 class="text-2xl font-bold text-indigo-700 mb-4">${message}</h2>
+            <p class="text-lg text-gray-700">You scored ${result.score} out of ${result.total}</p>
+            <button onclick="location.reload()" class="mt-6 bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 transition">
+              🔁 Restart Quiz
+            </button>
+          </div>
+        `;
+      })
+      .catch(() => {
+        document.querySelector(".grid").innerHTML = `
+          <div class="text-center w-full">
+            <p class="text-red-600 font-semibold">❌ Failed to submit quiz. Try again later.</p>
+          </div>
+        `;
+      });
+  }
+});
